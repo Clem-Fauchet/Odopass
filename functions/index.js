@@ -20,25 +20,17 @@ const firebaseConfig = {
 const firebase = require('firebase')
 firebase.initializeApp(firebaseConfig)
 
-//TEST POST DOC FIREBASE
-// app.post('/doc', (req, res) => {
-// 	const newDoc = {
-// 		body: req.body.body,
-// 		userHandle: req.body.userHandle,
-// 	}
+//CHECK EMPTY
+const isEmpty = (str) => {
+	if (str.trim() === '') return true
+	else return false
+}
 
-// 	admin
-// 		.firestore()
-// 		.collection('doc')
-// 		.add(newDoc)
-// 		.then((doc) => {
-// 			return res.json({ message: `document ${doc.id} created successfully` })
-// 		})
-// 		.catch((err) => {
-// 			res.status(500).json({ error: 'Something went wrong' })
-// 			console.error(err)
-// 		})
-// })
+const isEmail = (email) => {
+	const emailRegEx = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+	if (email.match(emailRegEx)) return true
+	else return false
+}
 
 //REGISTER API
 app.post('/register', (req, res) => {
@@ -46,8 +38,25 @@ app.post('/register', (req, res) => {
 		username: req.body.username,
 		email: req.body.email,
 		password: req.body.password,
-		confirmPassword: req.body.password,
+		confirmPassword: req.body.confirmPassword,
 	}
+
+	let errors = {}
+
+	//EMAIL validation
+	if (isEmpty(newUser.email)) {
+		errors.email = 'Must not be empty'
+	} else if (!isEmail(newUser.email)) {
+		errors.email = 'Must be a valid email address'
+	}
+
+	//OTHER FIELD validation
+	if (isEmpty(newUser.username)) errors.username = 'Must not be empty'
+	if (isEmpty(newUser.password)) errors.password = 'Must not be empty'
+	if (newUser.password !== newUser.confirmPassword)
+		errors.confirmPassword = 'Passwords must be the same'
+
+	if (Object.keys(errors).length > 0) return res.status(400).json(errors)
 
 	let token //token validation for each user
 
