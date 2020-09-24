@@ -4,7 +4,10 @@ const admin = require('firebase-admin')
 
 admin.initializeApp()
 
-exports.createDocTest = functions.https.onRequest((req, res) => {
+const express = require('express')
+const app = express()
+
+app.post('/doc', (req, res) => {
 	const newDoc = {
 		body: req.body.body,
 		userHandle: req.body.userHandle,
@@ -22,3 +25,6 @@ exports.createDocTest = functions.https.onRequest((req, res) => {
 			console.error(err)
 		})
 })
+
+//https/baseurl.com/api/... convention
+exports.api = functions.region('europe-west2').https.onRequest(app)
