@@ -32,7 +32,7 @@ const isEmail = (email) => {
 	else return false
 }
 
-//REGISTER API
+//*********************REGISTER API***************//
 app.post('/register', (req, res) => {
 	const newUser = {
 		username: req.body.username,
@@ -109,6 +109,44 @@ app.post('/register', (req, res) => {
 				return res.status(500).json({ error: err.code }) //500 => internal server error (request)
 			}
 		})
+
+	return null
+})
+
+//*********************LOGIN API***************//
+app.post('/login', (req, res) => {
+	const user = {
+		email: req.body.email,
+		password: req.body.password,
+	}
+
+	let errors = {}
+
+	if (isEmpty(user.email)) errors.email = 'Must not be empty'
+	if (isEmpty(user.password)) errors.password = 'Must not be empty'
+
+	if (Object.keys(errors).length > 0) return res.status(400).json(errors)
+
+	firebase
+		.auth()
+		.signInWithEmailAndPassword(user.email, user.password)
+		.then((data) => {
+			return data.user.getIdToken()
+		})
+		.then((token) => {
+			return res.json({ token })
+		})
+		.catch((err) => {
+			console.error(err)
+			if (err.code === 'auth/wrong-password') {
+				return res
+					.status(403)
+					.json({ general: 'Wrong information, please try again' }) //Unauthorized
+			}
+			return res.status(500).json({ error: err.code })
+		})
+
+	return null
 })
 
 //https/baseurl.com/api/... => convention    europe-west2- Londres
