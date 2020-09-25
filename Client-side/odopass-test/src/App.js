@@ -10,10 +10,14 @@ import Register from './Pages/Register'
 import UserProfile from './Pages/UserProfile'
 import UsersList from './Pages/UsersList'
 
+//Components
+import NavBar from './Components/NavBar'
+
 function App() {
 	return (
 		<div className='App'>
 			<Router>
+				<NavBar />
 				<Switch>
 					<Route exact path='/' component={Login} />
 					<Route exact path='/register' component={Register} />
