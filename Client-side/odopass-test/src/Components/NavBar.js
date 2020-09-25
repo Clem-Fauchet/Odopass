@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 //Material UI
@@ -34,11 +34,16 @@ const styles = (theme) => ({
 
 function NavBar(props) {
 	const { classes } = props
-	const [auth, setAuth] = useState(false)
+	const [auth, setAuth] = useState(true)
 
 	const handleChange = (e) => {
 		setAuth(e.target.checked)
 	}
+
+	// const tokenId = localStorage.FBIdToken
+	// useEffect(() => {
+	// 	setAuth((prevState) => !prevState) //change position with token
+	// }, [tokenId])
 
 	return (
 		<div className={classes.root}>
