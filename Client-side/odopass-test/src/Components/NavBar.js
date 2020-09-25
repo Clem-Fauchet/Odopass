@@ -34,7 +34,7 @@ const styles = (theme) => ({
 
 function NavBar(props) {
 	const { classes } = props
-	const [auth, setAuth] = useState(true)
+	const [auth, setAuth] = useState(false)
 
 	const handleChange = (e) => {
 		setAuth(e.target.checked)
