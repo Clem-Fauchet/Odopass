@@ -11,6 +11,7 @@ const { db } = require('./util/admin')
 const {
 	validateRegisterData,
 	validateLoginData,
+	reduceUserDetails,
 } = require('./util/validationData')
 
 //https/baseurl.com/api/... => convention    europe-west2- Londres
@@ -115,4 +116,19 @@ app.post('/login', (req, res) => {
 		})
 
 	return null
+})
+
+//*********************GET USER INFORMATION API***************//
+app.post('/user', (req, res) => {
+	let userProfile = reduceUserDetails(req.body)
+
+	db.doc(`/users/${req.uid}`)
+		.update(userProfile)
+		.then(() => {
+			return res.json({ message: 'Details added successfully' })
+		})
+		.catch((err) => {
+			console.error(err)
+			return res.status(500).json({ error: err.code })
+		})
 })
