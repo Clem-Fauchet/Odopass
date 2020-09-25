@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
 
 //Material UI
@@ -42,7 +42,7 @@ function Login(props) {
 		errors: {},
 	})
 
-	const { errors, loading } = state
+	// const { errors } = state
 
 	//submitting form
 
@@ -55,6 +55,7 @@ function Login(props) {
 			email: state.email,
 			password: state.password,
 		}
+
 		axios
 			.post('/login', userData)
 			.then((res) => {
@@ -63,7 +64,8 @@ function Login(props) {
 				props.history.push('/profile-user')
 			})
 			.catch((err) => {
-				setState({ errors: err.response.data, loading: false })
+				console.log(err.response.data)
+				setState({ loading: false, errors: err.response.data })
 			})
 	}
 
@@ -86,8 +88,8 @@ function Login(props) {
 						label='Email'
 						className={classes.textField}
 						// helperText={state.errors.email}
-						// error={state.errors.email ? true : false}
-						value={state.email || ''}
+						// error={errors.email ? true : false}
+						value={state.email}
 						onChange={handleChange}
 						fullWidth
 					></TextField>
@@ -98,8 +100,8 @@ function Login(props) {
 						label='Password'
 						className={classes.textField}
 						// helperText={state.errors.password}
-						// error={state.errors.password ? true : false}
-						value={state.password || ''}
+						// error={errors.password ? true : false}
+						value={state.password}
 						onChange={handleChange}
 						fullWidth
 					></TextField>

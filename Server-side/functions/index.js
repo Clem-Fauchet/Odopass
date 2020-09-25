@@ -10,6 +10,9 @@ const { db, admin } = require('./util/admin')
 
 const FbAuth = require('./util/FbAuth')
 
+const cors = require('cors')
+app.use(cors())
+
 const {
 	validateRegisterData,
 	validateLoginData,
