@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 
-function UsersList() {
+function UsersList(usersData) {
+	// const { data } = userData
+
 	const [state, setState] = useState({
 		username: '',
 		name: '',

@@ -1,6 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+
+//Redux
+import { connect } from 'react-redux'
+import { loginUser } from '../redux/actions/userActions'
 
 //Material UI
 import { withStyles } from '@material-ui/core/styles'
@@ -49,36 +53,27 @@ function Login(props) {
 	const [state, setState] = useState({
 		email: '',
 		password: '',
-		loading: false,
 		errors: {},
 	})
 
-	const { errors, loading } = state
+	useEffect(() => {
+		if (props.UI.errors) {
+			setState((prevState) => ({ ...prevState, errors: props.UI.errors }))
+		}
+	}, [props.UI.errors])
 
 	//submitting form
 
 	const handleSubmit = (e) => {
 		//submit form
 		e.preventDefault()
-		setState({ loading: true })
 
 		const userData = {
 			email: state.email,
 			password: state.password,
 		}
 
-		axios
-			.post('/login', userData)
-			.then((res) => {
-				console.log(res.data)
-				localStorage.setItem('FBIdToken', `Bearer ${res.data.token}`) //store identification token in application
-				setState({ loading: false })
-				props.history.push('/profile-user')
-			})
-			.catch((err) => {
-				console.log(err.response.data)
-				setState({ loading: false, errors: err.response.data })
-			})
+		props.loginUser(userData, props.history) //redirect on success
 	}
 
 	const handleChange = (e) => {
@@ -99,8 +94,8 @@ function Login(props) {
 						name='email'
 						label='Email'
 						className={classes.textField}
-						// helperText={state.errors.email}
-						// error={errors.email ? true : false}
+						helperText={state.errors.email}
+						error={state.errors.email ? true : false}
 						value={state.email}
 						onChange={handleChange}
 						fullWidth
@@ -111,28 +106,28 @@ function Login(props) {
 						name='password'
 						label='Password'
 						className={classes.textField}
-						// helperText={state.errors.password}
-						// error={errors.password ? true : false}
+						helperText={state.errors.password}
+						error={state.errors.password ? true : false}
 						value={state.password}
 						onChange={handleChange}
 						fullWidth
 					></TextField>
 
-					{/* {errors.general && (
+					{state.errors.general && (
 						<Typography variant='body2' className={classes.customError}>
-							{errors.general}
+							{state.errors.general}
 						</Typography>
-					)} */}
+					)}
 
 					<Button
 						variant='contained'
 						color='primary'
 						className={classes.submitButton}
 						onClick={handleSubmit}
-						disabled={loading}
+						disabled={state.loading}
 					>
 						Login
-						{loading && (
+						{state.loading && (
 							<CircularProgress
 								size={20}
 								className={classes.circularProgress}
@@ -150,4 +145,16 @@ function Login(props) {
 	)
 }
 
-export default withStyles(styles)(Login)
+const mapStateToProps = (state) => ({
+	user: state.user,
+	UI: state.UI,
+})
+
+const mapActionsToProps = {
+	loginUser,
+}
+
+export default connect(
+	mapStateToProps,
+	mapActionsToProps
+)(withStyles(styles)(Login))
