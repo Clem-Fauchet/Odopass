@@ -6,7 +6,7 @@ const firebaseConfig = require('./util/config')
 const firebase = require('firebase')
 firebase.initializeApp(firebaseConfig)
 
-const { db } = require('./util/admin')
+const { db, admin } = require('./util/admin')
 
 const {
 	validateRegisterData,
@@ -67,7 +67,7 @@ app.post('/register', (req, res) => {
 				userId,
 			}
 
-			return db.doc(`/users/${userId}`).set(userInformation) //adding user information to db
+			return db.doc(`/users/${newUser.username}`).set(userInformation) //adding user information to db
 		})
 		.then(() => {
 			return res.status(201).json({ token })
@@ -119,10 +119,48 @@ app.post('/login', (req, res) => {
 })
 
 //*********************GET USER INFORMATION API***************//
-app.post('/user', (req, res) => {
+const FbAuth = (req, res, next) => {
+	let tokenId
+
+	if (
+		req.headers.authorization &&
+		req.headers.authorization.startsWith('Bearer')
+	) {
+		//Bearer string => convention
+		tokenId = req.headers.authorization.split('Bearer ')[1] //get the second element => authentication Token
+	} else {
+		console.error('No token found')
+		return res.status(403).json({ error: 'Unauthorized' })
+	}
+
+	admin
+		.auth()
+		.verifyIdToken(tokenId)
+		.then((decodedToken) => {
+			req.user = decodedToken
+			console.log(decodedToken)
+			return db
+				.collection('users')
+				.where('userId', '==', req.user.uid) //target user Id
+				.limit(1) //get only one document
+				.get()
+		})
+		.then((data) => {
+			req.user.username = data.docs[0].data().username //extract username property => add to request
+			return next() //allow to proceed
+		})
+		.catch((err) => {
+			console.error('Error with token', err)
+			return res.status(403).json(err)
+		})
+
+	return null
+}
+
+app.post('/user', FbAuth, (req, res) => {
 	let userProfile = reduceUserDetails(req.body)
 
-	db.doc(`/users/${req.uid}`)
+	db.doc(`/users/${req.user.username}`)
 		.update(userProfile)
 		.then(() => {
 			return res.json({ message: 'Details added successfully' })
