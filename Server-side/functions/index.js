@@ -64,10 +64,10 @@ app.post('/register', (req, res) => {
 			const userInformation = {
 				//user details information add to db
 				username: newUser.username,
-				name: 'default',
+				name: '',
 				email: newUser.email,
-				shortDescription: 'default',
-				createdAt: new Date().toISOString(),
+				shortDescription: '',
+				createdAt: new Date().toISOString().split('T')[0],
 				userId,
 			}
 
@@ -82,7 +82,7 @@ app.post('/register', (req, res) => {
 			if (err.code === 'auth/email-already-in-use') {
 				return res.status(400).json({ message: 'This email is already use.' }) //400 => request error client
 			} else {
-				return res.status(500).json({ error: err.code }) //500 => internal server error (request)
+				return res.status(500).json({ general: 'Something went wrong' }) //500 => internal server error (request)
 			}
 		})
 
@@ -145,6 +145,7 @@ app.get('/user', FbAuth, (req, res) => {
 		.get()
 		.then((doc) => {
 			if (doc.exists) {
+				//complete profile
 				userData.profile = {
 					name: doc.data().name,
 					email: doc.data().email,
@@ -165,12 +166,13 @@ app.get('/user', FbAuth, (req, res) => {
 //*********************GET ALL USERS INFORMATION***************//
 app.get('/users', (req, res) => {
 	db.collection('users')
-		.orderBy('createdAt', 'desc')
+		.orderBy('createdAt', 'desc') //ordering user profiles
 		.get()
 		.then((data) => {
 			let users = []
 
 			data.forEach((doc) => {
+				//showing few information for each user
 				users.push({
 					username: doc.data().username,
 					name: doc.data().name,
