@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 //Material UI
 import { withStyles } from '@material-ui/core/styles'
@@ -7,7 +8,7 @@ import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
-import MenuIcon from '@material-ui/icons/Menu'
+import ListIcon from '@material-ui/icons/List'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import Switch from '@material-ui/core/Switch'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
@@ -18,6 +19,7 @@ const styles = (theme) => ({
 
 	title: {
 		marginRight: '2em',
+		fontSize: '1.1em',
 	},
 
 	userProfile: {
@@ -32,10 +34,10 @@ const styles = (theme) => ({
 
 function NavBar(props) {
 	const { classes } = props
-	const [auth, setAuth] = React.useState(true)
+	const [auth, setAuth] = useState(false)
 
-	const handleChange = (event) => {
-		setAuth(event.target.checked)
+	const handleChange = (e) => {
+		setAuth(e.target.checked)
 	}
 
 	return (
@@ -49,6 +51,8 @@ function NavBar(props) {
 							aria-label='login switch'
 						/>
 					}
+					component={Link}
+					to='/'
 					label={auth ? 'Logout' : 'Login'}
 				/>
 			</FormGroup>
@@ -60,8 +64,10 @@ function NavBar(props) {
 						className={classes.menuButton}
 						color='inherit'
 						aria-label='menu'
+						component={Link}
+						to='/users-list'
 					>
-						<MenuIcon />
+						<ListIcon />
 					</IconButton>
 
 					<Typography variant='h6' className={classes.title}>
@@ -75,6 +81,8 @@ function NavBar(props) {
 								aria-controls='menu-appbar'
 								aria-haspopup='true'
 								color='inherit'
+								component={Link}
+								to='/profile-user'
 							>
 								<AccountCircleIcon className={classes.userProfileIcon} />
 							</IconButton>
