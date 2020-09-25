@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
 
 //Material UI
 import { withStyles } from '@material-ui/core/styles'
@@ -8,8 +9,9 @@ import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
-const styles = {
+const styles = () => ({
 	form: {
 		textAlign: 'center',
 		padding: '0.5em',
@@ -23,6 +25,7 @@ const styles = {
 
 	submitButton: {
 		marginTop: '2em',
+		position: 'relative',
 	},
 
 	customError: {
@@ -30,7 +33,15 @@ const styles = {
 		fontSize: '0.9rem',
 		marginTop: '15px',
 	},
-}
+
+	register: {
+		marginTop: '1.5em',
+	},
+
+	circularProgress: {
+		position: 'absolute',
+	},
+})
 
 function Login(props) {
 	const { classes } = props
@@ -42,7 +53,7 @@ function Login(props) {
 		errors: {},
 	})
 
-	// const { errors } = state
+	const { errors, loading } = state
 
 	//submitting form
 
@@ -60,6 +71,7 @@ function Login(props) {
 			.post('/login', userData)
 			.then((res) => {
 				console.log(res.data)
+				localStorage.setItem('FBIdToken', `Bearer ${res.data.token}`) //store identification token in application
 				setState({ loading: false })
 				props.history.push('/profile-user')
 			})
@@ -117,9 +129,20 @@ function Login(props) {
 						color='primary'
 						className={classes.submitButton}
 						onClick={handleSubmit}
+						disabled={loading}
 					>
-						Submit
+						Login
+						{loading && (
+							<CircularProgress
+								size={20}
+								className={classes.circularProgress}
+							/>
+						)}
 					</Button>
+
+					<Typography className={classes.register}>
+						Don't have an account ? Register <Link to='/register'>here</Link>
+					</Typography>
 				</form>
 			</Grid>
 			<Grid item sm={3} />
