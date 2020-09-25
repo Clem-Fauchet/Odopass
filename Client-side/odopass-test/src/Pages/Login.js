@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
 //Material UI
@@ -24,6 +24,12 @@ const styles = {
 	submitButton: {
 		marginTop: '2em',
 	},
+
+	customError: {
+		color: 'red',
+		fontSize: '0.9rem',
+		marginTop: '15px',
+	},
 }
 
 function Login(props) {
@@ -36,10 +42,29 @@ function Login(props) {
 		errors: {},
 	})
 
+	const { errors, loading } = state
+
+	//submitting form
+
 	const handleSubmit = (e) => {
 		//submit form
 		e.preventDefault()
 		setState({ loading: true })
+
+		const userData = {
+			email: state.email,
+			password: state.password,
+		}
+		axios
+			.post('/login', userData)
+			.then((res) => {
+				console.log(res.data)
+				setState({ loading: false })
+				props.history.push('/profile-user')
+			})
+			.catch((err) => {
+				setState({ errors: err.response.data, loading: false })
+			})
 	}
 
 	const handleChange = (e) => {
@@ -60,7 +85,9 @@ function Login(props) {
 						name='email'
 						label='Email'
 						className={classes.textField}
-						value={state.email}
+						// helperText={state.errors.email}
+						// error={state.errors.email ? true : false}
+						value={state.email || ''}
 						onChange={handleChange}
 						fullWidth
 					></TextField>
@@ -70,10 +97,18 @@ function Login(props) {
 						name='password'
 						label='Password'
 						className={classes.textField}
-						value={state.password}
+						// helperText={state.errors.password}
+						// error={state.errors.password ? true : false}
+						value={state.password || ''}
 						onChange={handleChange}
 						fullWidth
 					></TextField>
+
+					{/* {errors.general && (
+						<Typography variant='body2' className={classes.customError}>
+							{errors.general}
+						</Typography>
+					)} */}
 
 					<Button
 						variant='contained'
