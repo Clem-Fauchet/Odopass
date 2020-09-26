@@ -8,7 +8,7 @@ firebase.initializeApp(firebaseConfig)
 
 const { db, admin } = require('./util/admin')
 
-const FbAuth = require('./util/FbAuth')
+// const FbAuth = require('./util/FbAuth')
 
 const cors = require('cors')
 app.use(cors())
@@ -125,47 +125,6 @@ app.post('/login', (req, res) => {
 	return null
 })
 
-//*********************UPDATING USER INFORMATION PROFILE***************//
-// app.post('/user', FbAuth, (req, res) => {
-// 	let userProfile = reduceUserDetails(req.body)
-
-// 	db.doc(`/users/${req.user.username}`)
-// 		.update(userProfile)
-// 		.then(() => {
-// 			return res.json({ message: 'Details added successfully' })
-// 		})
-// 		.catch((err) => {
-// 			console.error(err)
-// 			return res.status(500).json({ error: err.code })
-// 		})
-// })
-
-//*********************GET USER INFORMATION***************//
-app.get('/user', FbAuth, (req, res) => {
-	let userData = {}
-
-	db.doc(`/users/${req.username}`)
-		.get()
-		.then((doc) => {
-			if (doc.exists) {
-				//complete profile
-				userData.profile = {
-					name: doc.data().name,
-					email: doc.data().email,
-					shortDescription: doc.data().shortDescription,
-					createdAt: doc.data().createdAt,
-				}
-			}
-
-			return res.json(userData)
-		})
-
-		.catch((err) => {
-			console.error(err)
-			return res.status(500).json({ error: err.code })
-		})
-})
-
 //*********************GET ALL USERS INFORMATION***************//
 app.get('/users', (req, res) => {
 	db.collection('users')
@@ -190,3 +149,44 @@ app.get('/users', (req, res) => {
 			return res.status(500).json({ error: err.code })
 		})
 })
+
+//*********************GET USER INFORMATION***************//
+app.get('/users/:username', (req, res) => {
+	let userData = {}
+
+	db.doc(`/users/${req.params.username}`)
+		.get()
+		.then((doc) => {
+			if (doc.exists) {
+				//complete profile
+				userData.profile = {
+					name: doc.data().name,
+					email: doc.data().email,
+					shortDescription: doc.data().shortDescription,
+					createdAt: doc.data().createdAt,
+				}
+			}
+
+			return res.json(userData)
+		})
+
+		.catch((err) => {
+			console.error(err)
+			return res.status(500).json({ error: err.code })
+		})
+})
+
+//*********************UPDATING USER INFORMATION PROFILE***************//
+// app.post('/user', FbAuth, (req, res) => {
+// 	let userProfile = reduceUserDetails(req.body)
+
+// 	db.doc(`/users/${req.user.username}`)
+// 		.update(userProfile)
+// 		.then(() => {
+// 			return res.json({ message: 'Details added successfully' })
+// 		})
+// 		.catch((err) => {
+// 			console.error(err)
+// 			return res.status(500).json({ error: err.code })
+// 		})
+// })
