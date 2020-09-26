@@ -33,6 +33,6 @@
       "last 1 safari version"
     ]
   }, 
-  "proxy": "https://europe-west2-odopass-test.cloudfunctions.net/api/"
+  "proxy": "https://europe-west2-odopass-test.cloudfunctions.net/api"
   
 }

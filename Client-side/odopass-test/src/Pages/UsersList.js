@@ -53,7 +53,7 @@ const styles = () => ({
 })
 
 function UsersList(usersData) {
-	const { data, classes } = usersData
+	const { classes } = usersData
 
 	useEffect(() => {
 		usersData.getUsersList()
@@ -79,7 +79,7 @@ function UsersList(usersData) {
 						</TableHead>
 
 						<TableBody>
-							{data.lists.map((user, key) => (
+							{usersData.data.lists.map((user, key) => (
 								<TableRow key={key}>
 									<TableCell className={classes.rowTable}>
 										{user.email}
@@ -87,13 +87,10 @@ function UsersList(usersData) {
 									<TableCell className={classes.rowTable}>
 										{user.name}
 									</TableCell>
-									<TableCell
-										className={`${classes.rowTable} ${classes.username}`}
-										component={Link}
-										to={`/users/${user.username}`}
-									>
-										{user.username}
-									</TableCell>
+
+									<td className={`${classes.rowTable} ${classes.username}`}>
+										<a href={`/users/${user.username}`}>{user.username}</a>
+									</td>
 								</TableRow>
 							))}
 						</TableBody>

@@ -1,5 +1,6 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import axios from 'axios'
 
 //Redux
 import { Provider } from 'react-redux'
@@ -16,6 +17,9 @@ import UsersList from './Pages/UsersList'
 
 //Components
 import NavBar from './Components/NavBar'
+
+axios.defaults.baseUrl =
+	'https://europe-west2-odopass-test.cloudfunctions.net/api'
 
 function App() {
 	return (
