@@ -21,7 +21,7 @@ $font: 'Montserrat', sans-serif;
   }
 }
 
-.MuiTypography-root {
+.MuiTypography-root, .MuiTableCell-root {
   font-family: $font !important;
 }
 
