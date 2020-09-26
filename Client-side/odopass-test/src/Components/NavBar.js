@@ -65,7 +65,7 @@ function NavBar(props) {
 						/>
 					}
 					component={Link}
-					to={authenticated ? '/profile-user' : '/'}
+					to={authenticated ? '/users' : '/'}
 					label={auth ? 'Logout' : 'Login'}
 				/>
 			</FormGroup>
@@ -78,7 +78,7 @@ function NavBar(props) {
 						color='inherit'
 						aria-label='menu'
 						component={Link}
-						to='/users-list'
+						to='/users'
 					>
 						<ListIcon />
 					</IconButton>
@@ -95,7 +95,7 @@ function NavBar(props) {
 								aria-haspopup='true'
 								color='inherit'
 								component={Link}
-								to='/profile-user'
+								to='/' //should go to user profile
 							>
 								<AccountCircleIcon className={classes.userProfileIcon} />
 							</IconButton>

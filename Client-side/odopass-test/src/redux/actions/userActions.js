@@ -25,7 +25,8 @@ export const loginUser = (userData, history) => (dispatch) => {
 			setAuthorizationHeader(res.data.token)
 			dispatch(getUserDetails())
 			dispatch({ type: CLEAR_ERRORS })
-			history.push('/profile-user')
+			history.push(`/users`)
+
 		})
 
 		.catch((err) => {
@@ -37,16 +38,17 @@ export const loginUser = (userData, history) => (dispatch) => {
 		})
 }
 
-export const getUserDetails = () => (dispatch) => {
+//Get User Information
+export const getUserDetails = (username) => (dispatch) => {
 	axios
-		.get('/user')
+		.get(`/user/${username}`)
 		.then((res) => {
 			dispatch({
 				type: SET_USER,
 				payload: res.data,
 			})
 		})
-		.catch((err) => console.log(err))
+		.catch((err) => console.log('failed getting user details'))
 }
 
 //Register User
@@ -59,7 +61,7 @@ export const registerUser = (newUserData, history) => (dispatch) => {
 			setAuthorizationHeader(res.data.token)
 			dispatch(getUserDetails())
 			dispatch({ type: CLEAR_ERRORS })
-			history.push('/profile-user')
+			history.push(`/users`)
 		})
 
 		.catch((err) => {
@@ -76,5 +78,5 @@ export const logoutUser = () => (dispatch) => {
 	localStorage.removeItem('FBIdToken') //remove token
 	delete axios.defaults.headers.common['Authorization'] //delete the entry
 	dispatch({ type: SET_UNAUTHENTICATED })
-	
 }
+
