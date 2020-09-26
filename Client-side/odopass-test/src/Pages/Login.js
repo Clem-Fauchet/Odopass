@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import { Link } from 'react-router-dom'
 
 //Redux
@@ -58,12 +57,11 @@ function Login(props) {
 
 	useEffect(() => {
 		if (props.UI.errors) {
-			setState((prevState) => ({ ...prevState, errors: props.UI.errors }))
+			setState((prevState) => ({ ...prevState, errors: props.UI.errors })) //import errors to our state
 		}
 	}, [props.UI.errors])
 
-	//submitting form
-
+	//submitting forms
 	const handleSubmit = (e) => {
 		//submit form
 		e.preventDefault()
@@ -73,7 +71,7 @@ function Login(props) {
 			password: state.password,
 		}
 
-		props.loginUser(userData, props.history) //redirect on success
+		props.loginUser(userData, props.history) //get user information	& redirect on success
 	}
 
 	const handleChange = (e) => {
@@ -113,7 +111,7 @@ function Login(props) {
 						fullWidth
 					></TextField>
 
-					{state.errors.general && (
+					{state.errors.general && ( //if information wrong
 						<Typography variant='body2' className={classes.customError}>
 							{state.errors.general}
 						</Typography>
@@ -150,11 +148,6 @@ const mapStateToProps = (state) => ({
 	UI: state.UI,
 })
 
-const mapActionsToProps = {
-	loginUser,
-}
-
-export default connect(
-	mapStateToProps,
-	mapActionsToProps
-)(withStyles(styles)(Login))
+export default connect(mapStateToProps, { loginUser })(
+	withStyles(styles)(Login)
+)

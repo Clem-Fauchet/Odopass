@@ -1,6 +1,9 @@
-import React, { useState } from 'react'
-import axios from 'axios'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+
+//Redux
+import { connect } from 'react-redux'
+import { registerUser } from '../redux/actions/userActions'
 
 //Material UI
 import { withStyles } from '@material-ui/core/styles'
@@ -51,18 +54,19 @@ function Register(props) {
 		email: '',
 		password: '',
 		confirmPassword: '',
-		loading: false,
 		errors: {},
 	})
 
-	const { errors, loading } = state
+	useEffect(() => {
+		if (props.UI.errors) {
+			setState((prevState) => ({ ...prevState, errors: props.UI.errors })) //import errors to our state
+		}
+	}, [props.UI.errors])
 
 	//submitting form
-
 	const handleSubmit = (e) => {
 		//submit form
 		e.preventDefault()
-		setState({ loading: true })
 
 		const newUserData = {
 			username: state.username,
@@ -71,18 +75,7 @@ function Register(props) {
 			confirmPassword: state.confirmPassword,
 		}
 
-		axios
-			.post('/register', newUserData)
-			.then((res) => {
-				console.log(res.data)
-				localStorage.setItem('FBIdToken', `Bearer ${res.data.token}`) //store identification token in application
-				setState({ loading: false })
-				props.history.push('/profile-user')
-			})
-			.catch((err) => {
-				console.log(err.response.data)
-				setState({ loading: false, errors: err.response.data })
-			})
+		props.registerUser(newUserData, props.history)
 	}
 
 	const handleChange = (e) => {
@@ -102,8 +95,8 @@ function Register(props) {
 						name='username'
 						label='Username'
 						className={classes.textField}
-						// helperText={state.errors.username}
-						// error={errors.username ? true : false}
+						helperText={state.errors.username}
+						error={state.errors.username ? true : false}
 						value={state.username}
 						onChange={handleChange}
 						fullWidth
@@ -114,8 +107,8 @@ function Register(props) {
 						name='email'
 						label='Email'
 						className={classes.textField}
-						// helperText={state.errors.email}
-						// error={errors.email ? true : false}
+						helperText={state.errors.email}
+						error={state.errors.email ? true : false}
 						value={state.email}
 						onChange={handleChange}
 						fullWidth
@@ -126,8 +119,8 @@ function Register(props) {
 						name='password'
 						label='Password'
 						className={classes.textField}
-						// helperText={state.errors.password}
-						// error={errors.password ? true : false}
+						helperText={state.errors.password}
+						error={state.errors.password ? true : false}
 						value={state.password}
 						onChange={handleChange}
 						fullWidth
@@ -138,28 +131,28 @@ function Register(props) {
 						name='confirmPassword'
 						label='Confirm Password'
 						className={classes.textField}
-						// helperText={state.errors.confirmPassword}
-						// error={errors.confirmPassword ? true : false}
+						helperText={state.errors.confirmPassword}
+						error={state.errors.confirmPassword ? true : false}
 						value={state.confirmPassword}
 						onChange={handleChange}
 						fullWidth
 					></TextField>
 
-					{/* {errors.general && (
+					{state.errors.general && (
 						<Typography variant='body2' className={classes.customError}>
-							{errors.general}
+							{state.errors.general}
 						</Typography>
-					)} */}
+					)}
 
 					<Button
 						variant='contained'
 						color='primary'
 						className={classes.submitButton}
 						onClick={handleSubmit}
-						disabled={loading}
+						disabled={state.loading}
 					>
 						Register
-						{loading && (
+						{state.loading && (
 							<CircularProgress
 								size={20}
 								className={classes.circularProgress}
@@ -177,4 +170,11 @@ function Register(props) {
 	)
 }
 
-export default withStyles(styles)(Register)
+const mapStateToProps = (state) => ({
+	user: state.user,
+	UI: state.UI,
+})
+
+export default connect(mapStateToProps, { registerUser })(
+	withStyles(styles)(Register)
+)

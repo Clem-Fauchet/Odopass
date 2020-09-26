@@ -2,7 +2,7 @@ import { SET_USER, SET_AUTHENTICATED, SET_UNAUTHENTICATED } from '../types'
 
 const initialState = {
 	authenticated: false,
-	information: {},
+	information: {}, //user details
 }
 
 export default function (state = initialState, action) {
@@ -15,6 +15,7 @@ export default function (state = initialState, action) {
 
 		case SET_UNAUTHENTICATED: //logout
 			return initialState
+
 
 		case SET_USER:
 			return {

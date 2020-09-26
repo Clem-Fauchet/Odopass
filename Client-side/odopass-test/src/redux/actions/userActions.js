@@ -1,25 +1,28 @@
 import {
 	SET_USER,
-	SET_LIST,
 	SET_ERRORS,
 	LOADING_UI,
 	CLEAR_ERRORS,
+	SET_UNAUTHENTICATED,
 } from '../types'
 import axios from 'axios'
 
+//Access authorization
+const setAuthorizationHeader = (token) => {
+	const FBIdToken = `Bearer ${token}`
+	localStorage.setItem('FBIdToken', `Bearer ${FBIdToken}`) //store identification token in application
+
+	axios.defaults.headers.common['Authorization'] = FBIdToken
+}
+
+//Login user
 export const loginUser = (userData, history) => (dispatch) => {
-	dispatch({ type: LOADING_UI }) //dispatch action loading
+	dispatch({ type: LOADING_UI })
 
 	axios
 		.post('/login', userData)
 		.then((res) => {
-			console.log(res.data)
-
-			localStorage.setItem('FBIdToken', `Bearer ${res.data.token}`) //store identification token in application
-
-			const FBIdToken = `Bearer ${res.data.token}`
-			axios.defaults.headers.common['Authorization'] = FBIdToken
-
+			setAuthorizationHeader(res.data.token)
 			dispatch(getUserDetails())
 			dispatch({ type: CLEAR_ERRORS })
 			history.push('/profile-user')
@@ -44,4 +47,34 @@ export const getUserDetails = () => (dispatch) => {
 			})
 		})
 		.catch((err) => console.log(err))
+}
+
+//Register User
+export const registerUser = (newUserData, history) => (dispatch) => {
+	dispatch({ type: LOADING_UI }) //dispatch action loading
+
+	axios
+		.post('/register', newUserData)
+		.then((res) => {
+			setAuthorizationHeader(res.data.token)
+			dispatch(getUserDetails())
+			dispatch({ type: CLEAR_ERRORS })
+			history.push('/profile-user')
+		})
+
+		.catch((err) => {
+			console.log(err.response.data)
+			dispatch({
+				type: SET_ERRORS,
+				payload: err.response.data,
+			})
+		})
+}
+
+//Logout User
+export const logoutUser = () => (dispatch) => {
+	localStorage.removeItem('FBIdToken') //remove token
+	delete axios.defaults.headers.common['Authorization'] //delete the entry
+	dispatch({ type: SET_UNAUTHENTICATED })
+	
 }

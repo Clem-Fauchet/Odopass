@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { useHistory } from "react-router-dom";
+
+//redux
+import { connect } from 'react-redux'
+import store from '../redux/store'
+import {  logoutUser } from '../redux/actions/userActions'
 
 //Material UI
 import { withStyles } from '@material-ui/core/styles'
@@ -33,17 +39,19 @@ const styles = (theme) => ({
 })
 
 function NavBar(props) {
-	const { classes } = props
+	const { classes, authenticated } = props
 	const [auth, setAuth] = useState(false)
 
-	const handleChange = (e) => {
-		setAuth(e.target.checked)
-	}
 
-	// const tokenId = localStorage.FBIdToken
-	// useEffect(() => {
-	// 	setAuth((prevState) => !prevState) //change position with token
-	// }, [tokenId])
+	let history = useHistory()
+
+	const handleChange = (e) => {
+
+		setAuth(e.target.checked)
+		store.dispatch(logoutUser())
+		history.push('/')
+}
+
 
 	return (
 		<div className={classes.root}>
@@ -51,13 +59,13 @@ function NavBar(props) {
 				<FormControlLabel
 					control={
 						<Switch
-							checked={auth}
-							onChange={handleChange}
+							checked={authenticated ? !auth : auth}
+							onChange={authenticated ? handleChange : null}
 							aria-label='login switch'
 						/>
 					}
 					component={Link}
-					to='/'
+					to={authenticated ? '/profile-user' : '/'}
 					label={auth ? 'Logout' : 'Login'}
 				/>
 			</FormGroup>
@@ -99,4 +107,15 @@ function NavBar(props) {
 	)
 }
 
-export default withStyles(styles)(NavBar)
+const mapStateToProps = (state) => ({
+	authenticated: state.user.authenticated,
+})
+
+const mapActionsToProps = {
+	logoutUser,
+}
+
+export default connect(
+	mapStateToProps,
+	mapActionsToProps
+)(withStyles(styles)(NavBar))
