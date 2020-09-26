@@ -69,13 +69,9 @@ function UsersList(usersData) {
 						</TableHead>
 
 						<TableBody>
-							{data.lists.map((user) => (
-								<TableRow key={user.key}>
-									<TableCell
-										component='th'
-										scope='row'
-										className={classes.rowTable}
-									>
+							{data.lists.map((user, key) => (
+								<TableRow key={key}>
+									<TableCell className={classes.rowTable}>
 										{user.email}
 									</TableCell>
 									<TableCell className={classes.rowTable}>

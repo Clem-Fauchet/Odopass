@@ -160,6 +160,7 @@ app.get('/users/:username', (req, res) => {
 			if (doc.exists) {
 				//complete profile
 				userData.profile = {
+					username: doc.data().username,
 					name: doc.data().name,
 					email: doc.data().email,
 					shortDescription: doc.data().shortDescription,

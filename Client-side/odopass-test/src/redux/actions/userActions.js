@@ -26,7 +26,6 @@ export const loginUser = (userData, history) => (dispatch) => {
 			dispatch(getUserDetails())
 			dispatch({ type: CLEAR_ERRORS })
 			history.push(`/users`)
-
 		})
 
 		.catch((err) => {
@@ -41,14 +40,14 @@ export const loginUser = (userData, history) => (dispatch) => {
 //Get User Information
 export const getUserDetails = (username) => (dispatch) => {
 	axios
-		.get(`/user/${username}`)
+		.get(`/users/${username}`)
 		.then((res) => {
 			dispatch({
 				type: SET_USER,
 				payload: res.data,
 			})
 		})
-		.catch((err) => console.log('failed getting user details'))
+		.catch((err) => console.log(err))
 }
 
 //Register User
@@ -79,4 +78,3 @@ export const logoutUser = () => (dispatch) => {
 	delete axios.defaults.headers.common['Authorization'] //delete the entry
 	dispatch({ type: SET_UNAUTHENTICATED })
 }
-
