@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { Link } from 'react-router-dom'
 
 //Redux
 import { connect } from 'react-redux'
@@ -79,7 +80,9 @@ function UserProfile(userData) {
 					</CardContent>
 
 					<CardActions>
-						<Button size='small'>Go back</Button>
+						<Button size='small' component={Link} to={'/users'}>
+							Go back
+						</Button>
 					</CardActions>
 				</Card>
 			</Grid>

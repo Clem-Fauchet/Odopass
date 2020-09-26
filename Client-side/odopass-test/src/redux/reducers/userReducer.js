@@ -15,11 +15,14 @@ export default function (state = initialState, action) {
 			}
 
 		case SET_UNAUTHENTICATED: //logout
-			return initialState
+			return {
+				...state,
+				authenticated: false,
+			}
 
 		case SET_USER:
 			return {
-				authenticated: true,
+				...state,
 				loading: false,
 				...action.payload, //bind the details user to information
 			}

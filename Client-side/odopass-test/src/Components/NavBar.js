@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useHistory } from "react-router-dom";
 
 //redux
 import { connect } from 'react-redux'
 import store from '../redux/store'
-import {  logoutUser } from '../redux/actions/userActions'
+import { logoutUser } from '../redux/actions/userActions'
 
 //Material UI
 import { withStyles } from '@material-ui/core/styles'
@@ -15,7 +14,7 @@ import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
 import ListIcon from '@material-ui/icons/List'
-import AccountCircleIcon from '@material-ui/icons/AccountCircle'
+// import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import Switch from '@material-ui/core/Switch'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import FormGroup from '@material-ui/core/FormGroup'
@@ -42,16 +41,10 @@ function NavBar(props) {
 	const { classes, authenticated } = props
 	const [auth, setAuth] = useState(false)
 
-
-	let history = useHistory()
-
 	const handleChange = (e) => {
-
 		setAuth(e.target.checked)
 		store.dispatch(logoutUser())
-		history.push('/')
-}
-
+	}
 
 	return (
 		<div className={classes.root}>
@@ -65,7 +58,7 @@ function NavBar(props) {
 						/>
 					}
 					component={Link}
-					to={authenticated ? '/users' : '/'}
+					to={'/'}
 					label={auth ? 'Logout' : 'Login'}
 				/>
 			</FormGroup>
@@ -87,7 +80,8 @@ function NavBar(props) {
 						Users List
 					</Typography>
 
-					{auth && (
+					{/* user profile icon */}
+					{/* {auth && (
 						<div className={classes.userProfile}>
 							<IconButton
 								aria-label='account of current user'
@@ -100,7 +94,7 @@ function NavBar(props) {
 								<AccountCircleIcon className={classes.userProfileIcon} />
 							</IconButton>
 						</div>
-					)}
+					)} */}
 				</Toolbar>
 			</AppBar>
 		</div>

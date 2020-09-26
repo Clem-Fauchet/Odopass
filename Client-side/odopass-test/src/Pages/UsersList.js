@@ -17,11 +17,15 @@ import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
+import Button from '@material-ui/core/Button'
 
 const styles = () => ({
 	list: {
 		flexGrow: 1,
 		marginTop: '2em',
+	},
+
+	title: {
 		textAlign: 'center',
 	},
 
@@ -42,6 +46,10 @@ const styles = () => ({
 	username: {
 		cursor: 'pointer',
 	},
+
+	button: {
+		margin: '2em 0.5em',
+	},
 })
 
 function UsersList(usersData) {
@@ -56,7 +64,9 @@ function UsersList(usersData) {
 			<Grid item sm={2} />
 
 			<Grid item sm={8}>
-				<Typography variant='h4'>Users List</Typography>
+				<Typography variant='h4' className={classes.title}>
+					Users List
+				</Typography>
 
 				<TableContainer component={Paper} className={classes.table}>
 					<Table stickyHeader aria-label='simple table'>
@@ -89,6 +99,15 @@ function UsersList(usersData) {
 						</TableBody>
 					</Table>
 				</TableContainer>
+
+				<Button
+					className={classes.button}
+					size='small'
+					component={Link}
+					to={'/'}
+				>
+					Login Page
+				</Button>
 			</Grid>
 
 			<Grid item sm={2} />
