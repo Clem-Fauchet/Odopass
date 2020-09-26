@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react'
-import axios from 'axios'
-
-import UserCard from '../Components/UserCard'
+import { Link } from 'react-router-dom'
 
 //Redux
 import { connect } from 'react-redux'
@@ -39,6 +37,10 @@ const styles = () => ({
 	rowTable: {
 		fontWeight: '400',
 		textAlign: 'center',
+	},
+
+	username: {
+		cursor: 'pointer',
 	},
 })
 
@@ -79,7 +81,11 @@ function UsersList(usersData) {
 									<TableCell className={classes.rowTable}>
 										{user.name}
 									</TableCell>
-									<TableCell className={classes.rowTable}>
+									<TableCell
+										className={`${classes.rowTable} ${classes.username}`}
+										component={Link}
+										to={`/users/${user.username}`}
+									>
 										{user.username}
 									</TableCell>
 								</TableRow>

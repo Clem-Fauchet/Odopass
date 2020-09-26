@@ -126,19 +126,19 @@ app.post('/login', (req, res) => {
 })
 
 //*********************UPDATING USER INFORMATION PROFILE***************//
-app.post('/user', FbAuth, (req, res) => {
-	let userProfile = reduceUserDetails(req.body)
+// app.post('/user', FbAuth, (req, res) => {
+// 	let userProfile = reduceUserDetails(req.body)
 
-	db.doc(`/users/${req.user.username}`)
-		.update(userProfile)
-		.then(() => {
-			return res.json({ message: 'Details added successfully' })
-		})
-		.catch((err) => {
-			console.error(err)
-			return res.status(500).json({ error: err.code })
-		})
-})
+// 	db.doc(`/users/${req.user.username}`)
+// 		.update(userProfile)
+// 		.then(() => {
+// 			return res.json({ message: 'Details added successfully' })
+// 		})
+// 		.catch((err) => {
+// 			console.error(err)
+// 			return res.status(500).json({ error: err.code })
+// 		})
+// })
 
 //*********************GET USER INFORMATION***************//
 app.get('/user', FbAuth, (req, res) => {
