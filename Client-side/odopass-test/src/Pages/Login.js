@@ -82,9 +82,7 @@ function Login(props) {
 		<Grid container className={classes.form}>
 			<Grid item sm={3} />
 			<Grid item sm>
-				<Typography variant='h4' className={classes.pageTitle}>
-					Login
-				</Typography>
+				<Typography variant='h4'>Login</Typography>
 
 				<form noValidate onSubmit={handleSubmit}>
 					<TextField
